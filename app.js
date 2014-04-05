@@ -1,11 +1,11 @@
-Amazon = Ember.Application.create({
+Sakker = Ember.Application.create({
     LOG_TRANSITIONS: true
 });
-Amazon.Router = Ember.Router.extend({
+Sakker.Router = Ember.Router.extend({
     location: 'hash'
 });
 
-Amazon.Router.map(function(){
+Sakker.Router.map(function(){
     this.resource('index', {path: '/'});
     this.resource('login', {path: '/login'});
     this.resource('products', {path: '/products'});
@@ -14,21 +14,21 @@ Amazon.Router.map(function(){
     this.route('addToCart', {path: '/addToCart/:product_id'});
     this.route('finalCart', {path: '/finalCart'});
 });
-Amazon.IndexRoute = Ember.Route.extend({
+Sakker.IndexRoute = Ember.Route.extend({
     redirect: function(){
         this.transitionTo('login');
     }
 });
 
-Amazon.LoginRoute = Ember.Route.extend({
+Sakker.LoginRoute = Ember.Route.extend({
     model: function(){
         console.log("Transitioned into the login route...");
     }
 });
-Amazon.PrimeCheckRoute = Ember.Route.extend({
+Sakker.PrimeCheckRoute = Ember.Route.extend({
     beforeModel: function(transition){
         console.log("Transition value-->>"+transition);
-        var primeUsers = Amazon.ReloginNotNeededUsers.create();
+        var primeUsers = Sakker.ReloginNotNeededUsers.create();
         var loginController = this.controllerFor('login');
         currentUser = loginController.get('userId');
         var isPrimeUser = primeUsers.recheckNeeded(currentUser);
@@ -47,7 +47,7 @@ Amazon.PrimeCheckRoute = Ember.Route.extend({
         }
     },
     model: function(prodId){
-        var isPrimeProduct = Amazon.PrimeProduct.create().isPrimeProduct(prodId);
+        var isPrimeProduct = Sakker.PrimeProduct.create().isPrimeProduct(prodId);
         var result = "The product is NOT eligible for prime shipping..";
         if(isPrimeProduct){
             result = "The product is eligible for prime shipping..";
@@ -65,7 +65,7 @@ Amazon.PrimeCheckRoute = Ember.Route.extend({
     }
 });
 // OBJECTS START
-Amazon.PrimeProduct = Ember.Object.extend({
+Sakker.PrimeProduct = Ember.Object.extend({
     primeProducts: ['binaca','uboat'],
     nonPrimeProducts:['casio','logitech'],
     isPrimeProduct: function(name){
@@ -80,7 +80,7 @@ Amazon.PrimeProduct = Ember.Object.extend({
         });
     }
 });
-Amazon.ReloginNotNeededUsers = Ember.Object.extend({
+Sakker.ReloginNotNeededUsers = Ember.Object.extend({
     users: ['sandeep', 'akkeera'],
     recheckNeeded: function(userName){
     this.get('users').forEach(function(user){
@@ -92,7 +92,7 @@ Amazon.ReloginNotNeededUsers = Ember.Object.extend({
     });
     }
 });
-Amazon.Product = Ember.Object.extend({
+Sakker.Product = Ember.Object.extend({
     productId: null,
     productName: null,
     productType: null,
@@ -102,29 +102,29 @@ Amazon.Product = Ember.Object.extend({
     }.property('productName')
     
 });
-Amazon.ValidLogin = Ember.Object.extend({
+Sakker.ValidLogin = Ember.Object.extend({
     isValidLogin: true,
     isPrimeUser: false,
     isEligible: true
 });
-Amazon.ProductsHelper = Ember.Object.extend({
+Sakker.ProductsHelper = Ember.Object.extend({
     fetchProducts: function(){
-        return [Amazon.Product.create({
+        return [Sakker.Product.create({
             productId: "binaca",
             productName: "Binaca Spraymint",
             productType: "Mouth Freshner",
             productCategory: "Misc"
-        }), Amazon.Product.create({
+        }), Sakker.Product.create({
             productId: "uboat",
             productName: "U-Boat Classic",
             productType: "Watches",
             productCategory: "Luxury wear"
-        }),Amazon.Product.create({
+        }),Sakker.Product.create({
             productId: "casio",
             productName: "Casio Illuminator",
             productType: "Watches",
             productCategory: "Regular Wear"
-        }),Amazon.Product.create({
+        }),Sakker.Product.create({
             productId: "logitech",
             productName: "Logitech Wireless M325",
             productType: "Computer Mouse",
@@ -146,9 +146,9 @@ Amazon.ProductsHelper = Ember.Object.extend({
     }
 });
 // OBJECTS END
-Amazon.ProductsRoute = Ember.Route.extend({
+Sakker.ProductsRoute = Ember.Route.extend({
     model: function(){
-        return Amazon.ProductsHelper.create().fetchProducts();
+        return Sakker.ProductsHelper.create().fetchProducts();
     },
     afterModel: function(products){
         //Since the Logout Button is present in the application
@@ -156,7 +156,7 @@ Amazon.ProductsRoute = Ember.Route.extend({
         this.controllerFor('application').set('enableLogout', true);
     }
 });
-Amazon.LoginController = Ember.ObjectController.extend({
+Sakker.LoginController = Ember.ObjectController.extend({
     reAuthenticate: true,
     errorMess: null,
     checkPrimeLoginMessage:null,
@@ -167,7 +167,7 @@ Amazon.LoginController = Ember.ObjectController.extend({
     actions: {
         loginCheck: function(){
             var thisController = this;
-            var loginInfo = Amazon.ValidLogin.create();
+            var loginInfo = Sakker.ValidLogin.create();
             userId = this.get('userId');
             password = this.get('password');
             console.log("User ID entered is -->>"+userId);
@@ -203,7 +203,7 @@ Amazon.LoginController = Ember.ObjectController.extend({
     }
     
 });
-Amazon.ApplicationController = Ember.ObjectController.extend({
+Sakker.ApplicationController = Ember.ObjectController.extend({
     enableLogout: false,
     needs: ['application', 'login'],
     cartCount: null,
@@ -243,11 +243,11 @@ Amazon.ApplicationController = Ember.ObjectController.extend({
         }
     }
 });
-Amazon.ProductRoute = Ember.Route.extend({
+Sakker.ProductRoute = Ember.Route.extend({
     model: function(productId){
-        //var products = Amazon.ProductsHelper.create().fetchProducts();
+        //var products = Sakker.ProductsHelper.create().fetchProducts();
         console.log('About to fetch the product details-->>'+productId.product_id);
-        return Amazon.ProductsHelper.create().fetchProduct(productId.product_id);
+        return Sakker.ProductsHelper.create().fetchProduct(productId.product_id);
     },
     setupController: function(controller, model){
         // This property on the finalCart controller has to be set for passing
@@ -258,7 +258,7 @@ Amazon.ProductRoute = Ember.Route.extend({
 
     }
 });
-Amazon.ProductController = Ember.ObjectController.extend({
+Sakker.ProductController = Ember.ObjectController.extend({
     needs: ['application'],
     //cartLength: function(){
 
@@ -303,13 +303,13 @@ Amazon.ProductController = Ember.ObjectController.extend({
         //}
     }
 });
-Amazon.FinalCartRoute = Ember.Route.extend({
+Sakker.FinalCartRoute = Ember.Route.extend({
     model: function(){
         return this.store.find('cartItem');
 
     }
 });
-Amazon.FinalCartController = Ember.ArrayController.extend({
+Sakker.FinalCartController = Ember.ArrayController.extend({
     needs: ['application'],
     backButtonRemember: null,
     // This property remembers the total price of the items in the cart while they are
@@ -360,11 +360,11 @@ Amazon.FinalCartController = Ember.ArrayController.extend({
         }
     }
 });
-Amazon.Store = DS.Store.extend({
+Sakker.Store = DS.Store.extend({
     revision: 2,
     adapter: DS.LSAdapter
 });
-Amazon.CartItem = DS.Model.extend({
+Sakker.CartItem = DS.Model.extend({
     productId: DS.attr('string'),
     productName: DS.attr('string'),
     productPrice: DS.attr('number'),
