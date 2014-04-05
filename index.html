@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>mini Amazon</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!--<link type="text/css" rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css"/>-->
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/> 
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css"/> 
+  <link rel="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+  <!--<script src="js/lib/jquery-1.9.1.js"></script>-->
+
+</head>
+<body>
+  
+  <script type="text/x-handlebars" data-template-name="application">
+  <H3>Sakker`s Shopping Portal</H3></br>
+    <div>
+        <div class="primeInfo">
+            
+        </div></br>
+            {{#if enableLogout}}
+            <div class="col-xs-3">
+                 <button class="btn btn-warning btn-xs"{{action 'logoutAction'}}>Log Out</button>
+            </div>
+            <div class="col-xs-9 pull-left">
+                 <button class="btn btn-success btn-xs"{{action 'showCart'}}><i class="icon-shopping-cart"></i>Cart<i>{{cartCount}}</i></button>
+            </div>
+            {{/if}}
+        
+      </div></br>
+    
+          {{outlet}}
+   
+      </script>
+
+<script type="text/x-handlebars" data-template-name="products">
+    <div class="col-xs-12">
+        <ul>
+        {{#each}}
+            <li>{{#link-to 'product' productId}} {{productFullName}} {{/link-to}}</li>
+        {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/x-handlebars" data-template-name="product">
+   <H4>Product Details: </H4><button class="btn btn-success btn-xs"{{action 'addToCartAction' this }}><i class="icon-shopping-cart"></i>Add to Cart</button>
+
+    <div class="col-xs-12">
+        <div>
+            <ul>
+                <p> Name: <small class="muted"><li>{{productName}}</li></small></p>
+                <p>Product Type: <small class="muted"><li>{{productType}}</li></small></p>
+                <p>Category: <small class="muted"><li>{{productCategory}}</li></small></p>
+            </ul>
+        </div>
+    <div></div>
+    </div>
+
+    <div>
+        {{#link-to 'primeCheck' productId}}<b3>Check Prime Ship Eligibility</b3>{{/link-to}}
+        {{outlet "primeMessage"}}
+    </div>
+    <div>
+        {{#link-to 'products'}}<--Back To Products {{/link-to}}
+    </div>
+</script>
+<script type="text/x-handlebars" data-template-name="primeMsgTemp">
+    <div class="primeInfo">
+        {{#if msg}}
+        <b4>{{msg}}</b4>
+        {{/if}}
+    </div>
+</script>
+<script type="text/x-handlebars" data-template-name="primeCheck">
+           {{outlet "primeCheckOutlet"}}
+      <div>
+        {{#link-to 'products'}}<--Back To Products {{/link-to}}
+    </div>
+</script>
+<script type="text/x-handlebars" data-template-name="finalCart">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="primeInfo">
+                 <h4>Items in your cart are: </h4>
+            </div>
+            <div class="list-group">
+                {{#each}}
+                    <div class="list-group-item">
+                        <li>{{productName}} : {{productDesc}} : {{productPrice}} $ <button class="btn btn-danger btn-xs pull-right" {{action 'removeItemFromCartAction' productId}}>Remove</button></li>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+        Total price of the cart is : {{ totalCartPrice }} $
+        <div class="pill-right">
+          <button class="btn btn-info btn-xs" {{action 'checkoutCart'}}>Checkout</button>
+        </div>
+        </div>
+    </div>
+    <div class="row">
+        {{! Please check the ProductRoute for more info on backButtonRemember}}
+        {{#link-to 'product' backButtonRemember}} <-Back {{/link-to}}
+    </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="login">
+    <div class="errorKlass"> 
+        {{#if errorMess}}
+            {{errorMess}}
+        {{/if}}
+         {{#if checkPrimeLoginMessage}}
+               {{checkPrimeLoginMessage}} 
+         {{/if}}
+     </div>
+<div class="container col-md-5 align-center">
+      <form class="form-horizontal well span1" role="form" id="login">
+            <div class="form-group">
+              <div class="col-lg-offset-2 col-lg-10">
+              <label for="inputEmail1" class="col-lg-2 control-label">Email</label>
+              <div class="col-lg-10">
+                  
+                  {{input type="email" class="form-control" name="inputEmail1" id="emailField" placeHolder="Email" 
+                      valueBinding="userId"}}
+              </div>
+            </div>
+            </div>
+            <div class="form-group">
+              <div class="col-lg-offset-2 col-lg-10">
+              <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
+              <div class="col-lg-10">
+                  {{input type="password" class="form-control" name="inputPassword1" id="passwordField" placeHolder="Password" valueBinding="password"}}
+              </div>
+              </div>
+            </div>
+            </br>
+            <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <div class="col-lg-10 align-right">
+                  <button type="submit" id="SignInBtn" class="btn btn-success btn-lg btn-block"
+                      {{action "loginCheck"}}>Login</button>
+              </div>
+              </div>
+              </br>
+            </div>
+      </form>
+</div>
+</script>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="http://builds.emberjs.com/handlebars-1.0.0.js"></script>
+  <script src="http://builds.emberjs.com/ember-latest.js"></script>
+  <script src="http://builds.emberjs.com/beta/ember-data.js"></script>
+  <script src="js/lib/ember-local-storage-adapter.js"></script>
+  <script src="app.js"></script>
+  <!--<script src="dist/MightyCricket.min.js"></script>-->
+
+</body>
+</html>
