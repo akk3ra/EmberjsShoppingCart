@@ -46,12 +46,12 @@
 <script type="text/x-handlebars" data-template-name="product">
    <H4>Product Details: </H4><button class="btn btn-success btn-xs"{{action 'addToCartAction' this }}><i class="icon-shopping-cart"></i>Add to Cart</button>
 
-    <div class="col-xs-12">
-        <div>
+    <div class="row">
+        <div class="col-xs-5">
             <ul>
-                <p> Name: <small class="muted"><li>{{productName}}</li></small></p>
-                <p>Product Type: <small class="muted"><li>{{productType}}</li></small></p>
-                <p>Category: <small class="muted"><li>{{productCategory}}</li></small></p>
+                 Name: <small class="muted"><li>{{productName}}</li></small>
+                 Product Type: <small class="muted"><li>{{productType}}</li></small>
+                 Category: <small class="muted"><li>{{productCategory}}</li></small>
             </ul>
         </div>
     <div></div>
